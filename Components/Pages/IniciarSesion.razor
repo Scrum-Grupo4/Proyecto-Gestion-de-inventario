@@ -1,0 +1,55 @@
+@page "/IniciarSesion"
+@layout Vacio
+@inject GestionContext Gc
+@inject NavigationManager NavMan
+@inject IJSRuntime JSx
+@rendermode InteractiveServer
+@inject AuthService AuthService 
+@using GestionInventario.Services;
+@using Microsoft.EntityFrameworkCore
+
+<div class="fondo-crear-cuenta">
+    <div class="container">
+        <h1>Iniciar sesión</h1>
+        <EditForm Model="usuario" OnValidSubmit="Login">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mb-3">
+                <label for="Correo">Correo electrónico:</label>
+                <InputText class="form-control" @bind-Value="usuario.Correo" id="Correo" />
+            </div>
+            <div class="form-group mb-3">
+                <label for="Contraseña">Contraseña:</label>
+                <InputText class="form-control" type="password" @bind-Value="usuario.Contraseña" id="Contraseña" />
+            </div>
+            <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+            </div>
+            <p class="mb-2" style="display: inline;">¿Haz olvidado tu contraseña?</p><a href="/RecuperarContraseña">Recuperar contraseña</a>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private Usuario usuario = new Usuario();
+
+    async Task Login()
+    {
+        var usuarioExistente = await Gc.Usuarios
+            .FirstOrDefaultAsync(u => u.Correo == usuario.Correo && u.Contraseña == usuario.Contraseña);
+
+        if (usuarioExistente != null)
+        {
+
+            AuthService.Login(usuarioExistente.Rol); 
+
+            await JSx.InvokeVoidAsync("alert", "Inicio de sesión exitoso");
+            NavMan.NavigateTo("/GestionProducto");
+        }
+        else
+        {
+            await JSx.InvokeVoidAsync("alert", "Correo o contraseña incorrectos");
+        }
+    }
+}

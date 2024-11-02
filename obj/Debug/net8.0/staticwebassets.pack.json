@@ -1,0 +1,45 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\WIKELSON\\web\\Gestion\\GestionInventario\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\GestionInventario.bundle.scp.css",
+      "PackagePath": "staticwebassets\\GestionInventario.bundle.scp.css"
+    },
+    {
+      "Id": "C:\\Users\\WIKELSON\\web\\Gestion\\GestionInventario\\wwwroot\\Images\\pexels-pixabay-301614.jpg",
+      "PackagePath": "staticwebassets\\Images\\pexels-pixabay-301614.jpg"
+    },
+    {
+      "Id": "C:\\Users\\WIKELSON\\web\\Gestion\\GestionInventario\\wwwroot\\app.css",
+      "PackagePath": "staticwebassets\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\WIKELSON\\web\\Gestion\\GestionInventario\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\WIKELSON\\web\\Gestion\\GestionInventario\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\WIKELSON\\web\\Gestion\\GestionInventario\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.GestionInventario.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.GestionInventario.props",
+      "PackagePath": "build\\GestionInventario.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.GestionInventario.props",
+      "PackagePath": "buildMultiTargeting\\GestionInventario.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.GestionInventario.props",
+      "PackagePath": "buildTransitive\\GestionInventario.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

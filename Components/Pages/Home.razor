@@ -1,0 +1,10 @@
+﻿@page "/"
+@inject NavigationManager NavMan
+@rendermode InteractiveServer
+
+@code {
+    protected override void OnInitialized()
+    {
+        NavMan.NavigateTo("/IniciarSesion");
+    }
+}

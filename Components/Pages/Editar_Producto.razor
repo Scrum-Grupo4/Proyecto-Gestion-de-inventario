@@ -1,0 +1,82 @@
+@page "/CrearProducto"
+@page "/CrearProducto/{id:int}"
+@inject GestionContext Gc
+@inject NavigationManager NavMan
+@inject IJSRuntime JSx
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+
+<h1 class="mb-5">@((instancia.IdProducto == 0) ? "Agregar producto" : "Editar producto")</h1>
+
+<EditForm Model="instancia" OnValidSubmit="GuardarProducto">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="Nombre" class="form-label">Nombre del Producto:</label>
+        <InputText id="Nombre" @bind-Value="instancia.Nombre" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Descripcion" class="form-label">Descripción:</label>
+        <InputTextArea id="Descripcion" @bind-Value="instancia.Descripcion" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label for="Precio" class="form-label">Precio:</label>
+        <InputNumber id="Precio" @bind-Value="instancia.Precio" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="Imagen">Imagen:</label>
+        <input type="url" id="Imagen" class="form-control" @bind="instancia.Imagen"/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar Producto</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancelar">Cancelar</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Productos instancia = new Productos();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id != 0)
+        {
+            instancia = await Gc.Producto.FindAsync(Id) ?? new Productos();
+        }
+    }
+
+    async Task GuardarProducto()
+    {
+        if (instancia.IdProducto == 0) 
+        {
+            Gc.Producto.Add(instancia);
+            await Gc.SaveChangesAsync();
+
+            await JSx.InvokeVoidAsync("alert", "Se guardó el producto correctamente");
+        }
+        else
+        {
+
+            Gc.Producto.Update(instancia);
+            await Gc.SaveChangesAsync();
+
+            await JSx.InvokeVoidAsync("alert", "Se actualizaron los datos del producto");
+        }
+
+        NavMan.NavigateTo("/GestionProducto");
+    }
+
+    private void Cancelar()
+    {
+        NavMan.NavigateTo("/GestionProducto"); 
+    }
+}
+
+
+
+

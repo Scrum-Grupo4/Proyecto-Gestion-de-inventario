@@ -1,0 +1,72 @@
+@page "/CrearCuenta"
+@layout Vacio
+@inject GestionContext Gc
+@inject NavigationManager NavMan
+@inject IJSRuntime JSx
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+
+<div class="fondo-crear-cuenta">
+    <div class="container">
+        <h1>Registrar cuenta</h1>
+        <EditForm Model="instancia" OnValidSubmit="RegistrarCuenta">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group mb-3">
+                <label for="Nombre">Nombre completo:</label>
+                <InputText class="form-control" @bind-Value="instancia.Nombre" id="Nombre" />
+                <ValidationMessage For="@(() => instancia.Nombre)" />
+            </div>
+            <div class="form-group mb-3">
+                <label for="Correo">Correo electrónico:</label>
+                <InputText class="form-control" @bind-Value="instancia.Correo" id="Correo" />
+                <ValidationMessage For="@(() => instancia.Correo)" />
+            </div>
+            <div class="form-group mb-3">
+                <label for="NombreUsuario">Nombre de usuario:</label>
+                <InputText class="form-control" @bind-Value="instancia.NombreUsuario" id="NombreUsuario" />
+                <ValidationMessage For="@(() => instancia.NombreUsuario)" />
+            </div>
+            <div class="form-group mb-3">
+                <label for="Contraseña">Contraseña:</label>
+                <InputText class="form-control" type="password" @bind-Value="instancia.Contraseña" id="Contraseña" />
+                <ValidationMessage For="@(() => instancia.Contraseña)" />
+            </div>
+            <div class="form-group mb-3">
+                <label for="rol">Rol:</label>
+                <select id="rol" class="form-control" @bind="instancia.Rol">
+                    <option value="Administrador">Administrador</option>
+                    <option value="Usuario">Usuario</option>
+                </select>
+                <ValidationMessage For="@(() => instancia.Rol)" />
+            </div>
+            <div class="text-center mb-3">
+                <button type="submit" class="btn btn-primary">Registrar</button>
+            </div>
+            <p class="mb-2" style="display: inline;">¿Ya tienes una cuenta?</p><a href="/IniciarSesion">Iniciar sesión</a>  
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    Usuario instancia = new Usuario();
+
+    async Task RegistrarCuenta()
+    {
+        var usuarioExistente = await Gc.Usuarios.FirstOrDefaultAsync(u => u.Correo == instancia.Correo || u.NombreUsuario == instancia.NombreUsuario);
+
+        if (usuarioExistente != null)
+        {
+            await JSx.InvokeVoidAsync("alert", "El correo o nombre de usuario ya está en uso.");
+            return;
+        }
+
+        Gc.Usuarios.Add(instancia);
+        await Gc.SaveChangesAsync();
+
+        await JSx.InvokeVoidAsync("alert", "Se registró el usuario correctamente");
+
+        NavMan.NavigateTo("/GestionProducto");
+    }
+}

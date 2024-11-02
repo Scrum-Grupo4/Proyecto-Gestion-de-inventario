@@ -1,0 +1,114 @@
+@page "/GestionProducto"
+@inject GestionContext Gc
+@inject NavigationManager NavMan
+@inject IJSRuntime JSx
+@rendermode InteractiveServer
+@using Microsoft.EntityFrameworkCore
+
+<h1 class="mb-5">Gestión de productos</h1>
+
+<EditForm Model="producto" OnValidSubmit="BuscarProducto">
+    <div class="buscar">
+        <label for="Buscar">Buscar producto:</label>
+        <InputText @bind-Value="busqueda" id="Buscar" class="input-adaptable" />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+</EditForm>
+
+<div class="boton">
+    <button class="btn btn-primary" @onclick="AgregarProducto">Agregar producto</button>
+</div>
+
+<table class="table table-bordered custom-table">
+    <thead>
+        <tr>
+            <th>ID del Producto</th>
+            <th>Nombre del Producto</th>
+            <th>Descripción</th>
+            <th>Precio</th>
+            <th>Imagen</th>
+            <th>Modificar</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var producto in productos)
+        {
+            <tr>
+                <td>@producto.IdProducto</td>
+                <td>@producto.Nombre</td>
+                <td>@producto.Descripcion</td>
+                <td>@producto.Precio</td>
+                <td>
+                    <img src="@producto.Imagen" style="width: 50px; height: auto;" />
+                </td>
+                <td>
+                    <button class="btn btn-warning" @onclick="() => ModificarProducto(producto.IdProducto)">Modificar</button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" @onclick="() => EliminarProducto(producto.IdProducto)">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<Productos> productos = new List<Productos>();
+    Productos producto = new Productos();
+    private string busqueda;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProductos();
+    }
+
+    private async Task CargarProductos()
+    {
+        productos = await Gc.Producto.ToListAsync();
+    }
+
+    private async Task BuscarProducto()
+    {
+        if (!string.IsNullOrEmpty(busqueda))
+        {
+            productos = await Gc.Producto
+                .Where(p => p.Nombre.Contains(busqueda) || p.Descripcion.Contains(busqueda))
+                .ToListAsync();
+        }
+        else
+        {
+            await CargarProductos();
+        }
+    }
+
+    private void AgregarProducto()
+    {
+        NavMan.NavigateTo("/CrearProducto");
+    }
+
+    private void ModificarProducto(int idProducto)
+    {
+        NavMan.NavigateTo($"/CrearProducto/{idProducto}");
+    }
+
+    private async Task EliminarProducto(int idProducto)
+{
+
+    bool confirmacion = await JSx.InvokeAsync<bool>("confirm", "¿Estás seguro de que deseas eliminar este producto?");
+    
+    if (confirmacion)
+    {
+        var producto = await Gc.Producto.FindAsync(idProducto);
+        if (producto != null)
+        {
+            Gc.Producto.Remove(producto);
+            await Gc.SaveChangesAsync();
+            await CargarProductos();
+            await JSx.InvokeVoidAsync("alert", "Producto eliminado exitosamente");
+        }
+    }
+}
+
+}
+
